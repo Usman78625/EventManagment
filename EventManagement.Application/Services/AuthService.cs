@@ -55,12 +55,12 @@ namespace EventManagement.Application.Services
                 throw new InvalidOperationException("Email already exists");
             }
 
-            var user = new User
+             var user = new User
             {
                 Username = request.Username,
                 Email = request.Email,
                 PasswordHash = HashPassword(request.Password),
-                Role = string.IsNullOrWhiteSpace(request.Role) ? "User" : request.Role,
+                Role = "User",
                 CreatedAt = DateTime.UtcNow
             };
 
