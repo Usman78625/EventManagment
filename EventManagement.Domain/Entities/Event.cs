@@ -16,6 +16,7 @@ namespace EventManagement.Domain.Entities
         public int OrganizerId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string Category { get; set; }
         
         public virtual User? Organizer { get; set; }
         public virtual ICollection<Ticket>? Tickets { get; set; }

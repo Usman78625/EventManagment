@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EventManagement.Application.DTOs;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Interfaces;
+using System.Linq;
 
 namespace EventManagement.Application.Services
 {
@@ -71,6 +72,19 @@ namespace EventManagement.Application.Services
             existing.UpdatedAt = System.DateTime.UtcNow;
             await _eventRepository.UpdateAsync(existing);
             return existing;
+        }
+
+        public async Task<IEnumerable<EventDTO>> SearchEventsAsync(string? title, string? location, string? category)
+        {
+            var events = await _eventRepository.GetAllAsync();
+            var query = events.AsQueryable();
+            if (!string.IsNullOrEmpty(title))
+                query = query.Where(e => e.Title.Contains(title));
+            if (!string.IsNullOrEmpty(location))
+                query = query.Where(e => e.Location.Contains(location));
+            if (!string.IsNullOrEmpty(category))
+                query = query.Where(e => e.Category == category);
+            return MapToDTOs(query.ToList());
         }
 
         private EventDTO MapToDTO(Event @event)

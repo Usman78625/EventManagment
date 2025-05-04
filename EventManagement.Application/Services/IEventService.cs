@@ -13,5 +13,6 @@ namespace EventManagement.Application.Services
         Task<EventDTO> CreateEventAsync(EventDTO eventDTO);
         Task<Event> CreateEventAsync(Event eventObj);
         Task<Event> UpdateEventAsync(int id, Event eventObj);
+        Task<IEnumerable<EventDTO>> SearchEventsAsync(string? title, string? location, string? category);
     }
 }

@@ -61,5 +61,12 @@ namespace EventManagement.API.Controllers
             var updated = await _eventService.UpdateEventAsync(id, eventObj);
             return Ok(updated);
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchEvents([FromQuery] string? title, [FromQuery] string? location, [FromQuery] string? category)
+        {
+            var events = await _eventService.SearchEventsAsync(title, location, category);
+            return Ok(events);
+        }
     }
 } 

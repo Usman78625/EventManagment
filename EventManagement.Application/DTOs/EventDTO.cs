@@ -14,5 +14,6 @@ namespace EventManagement.Application.DTOs
         public decimal TicketPrice { get; set; }
         public int OrganizerId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Category { get; set; }
     }
 } 
