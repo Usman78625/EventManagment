@@ -111,6 +111,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+  app.UseStaticFiles();
 
 var summaries = new[]
 {
