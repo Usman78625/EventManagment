@@ -20,5 +20,6 @@ namespace EventManagement.Domain.Entities
         
         public virtual User? Organizer { get; set; }
         public virtual ICollection<Ticket>? Tickets { get; set; }
+        public virtual ICollection<string>? ImageUrls { get; set; }
     }
 } 

@@ -1,5 +1,7 @@
 using EventManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Text.Json;
 
 namespace EventManagement.Infrastructure.Data
 {
@@ -35,6 +37,20 @@ namespace EventManagement.Infrastructure.Data
                 .WithOne(t => t.Event)
                 .HasForeignKey(t => t.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure AvatarUrl as string (default)
+            modelBuilder.Entity<User>()
+                .Property(u => u.AvatarUrl)
+                .HasMaxLength(512);
+
+            // Configure ImageUrls as JSON string
+            var imageUrlsConverter = new ValueConverter<ICollection<string>, string>(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
+                v => string.IsNullOrEmpty(v) ? new List<string>() : JsonSerializer.Deserialize<ICollection<string>>(v, (JsonSerializerOptions)null)
+            );
+            modelBuilder.Entity<Event>()
+                .Property(e => e.ImageUrls)
+                .HasConversion(imageUrlsConverter);
         }
     }
 } 

@@ -5,6 +5,9 @@ using EventManagement.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using BCrypt.Net;
+using EventManagement.Domain.Entities;
+using EventManagement.Domain.Interfaces;
 
 namespace EventManagement.API.Controllers
 {
@@ -13,10 +16,12 @@ namespace EventManagement.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserRepository _userRepository;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserRepository userRepository)
         {
             _authService = authService;
+            _userRepository = userRepository;
         }
 
         [HttpPost("login")]
@@ -54,6 +59,27 @@ namespace EventManagement.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+[HttpPost("register-admin")]
+public async Task<IActionResult> RegisterAdmin([FromBody] RegisterRequest request)
+{
+    var existingUser = await _userRepository.GetByEmailAsync(request.Email);
+    if (existingUser != null)
+    {
+        return BadRequest(new { message = "Email already exists" });
+    }
+    // Force role to Admin
+    var user = new User
+    {
+        Username = request.Username,
+        Email = request.Email,
+        PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+        Role = "Admin",
+        CreatedAt = DateTime.UtcNow
+    };
+    await _userRepository.AddAsync(user);
+    return Ok(new { message = "Admin registered successfully" });
+}
 
         [Authorize]
         [HttpGet("me")]

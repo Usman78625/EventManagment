@@ -12,6 +12,7 @@ namespace EventManagement.Domain.Entities
         public string Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? AvatarUrl { get; set; }
         public virtual ICollection<Event> OrganizedEvents { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }
     }

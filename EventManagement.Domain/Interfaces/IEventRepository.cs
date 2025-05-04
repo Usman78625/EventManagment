@@ -11,6 +11,6 @@ namespace EventManagement.Domain.Interfaces
         Task<IEnumerable<Event>> GetByOrganizerIdAsync(int organizerId);
         Task AddAsync(Event @event);
         Task UpdateAsync(Event @event);
-        Task DeleteAsync(Event @event);
+        Task DeleteAsync(Event eventObj);
     }
 } 

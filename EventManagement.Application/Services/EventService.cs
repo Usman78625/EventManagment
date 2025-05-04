@@ -4,6 +4,7 @@ using EventManagement.Application.DTOs;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Interfaces;
 using System.Linq;
+using System;
 
 namespace EventManagement.Application.Services
 {
@@ -54,6 +55,8 @@ namespace EventManagement.Application.Services
         public async Task<Event> CreateEventAsync(Event @event)
         {
             @event.CreatedAt = System.DateTime.UtcNow;
+            @event.StartDate = DateTime.SpecifyKind(@event.StartDate, DateTimeKind.Utc);
+            @event.EndDate = DateTime.SpecifyKind(@event.EndDate, DateTimeKind.Utc);
             await _eventRepository.AddAsync(@event);
             return @event;
         }
@@ -85,6 +88,15 @@ namespace EventManagement.Application.Services
             if (!string.IsNullOrEmpty(category))
                 query = query.Where(e => e.Category == category);
             return MapToDTOs(query.ToList());
+        }
+
+        public async Task DeleteEventAsync(int id)
+        {
+            var existing = await _eventRepository.GetByIdAsync(id);
+            if (existing != null)
+            {
+                await _eventRepository.DeleteAsync(existing);
+            }
         }
 
         private EventDTO MapToDTO(Event @event)
